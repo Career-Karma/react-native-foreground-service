@@ -41,10 +41,17 @@ public class VIForegroundService extends Service {
 
     }
 
-    
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
+        this.stopForeground(true);
+        this.stopSelf();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        this.stopForeground(true);
         this.stopSelf();
     }
 }
