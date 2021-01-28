@@ -1,24 +1,19 @@
 /*
  * Copyright (c) 2011-2019, Zingaya, Inc. All rights reserved.
  */
-
 package com.voximplant.foregroundservice;
-
 import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
-
+import android.os.Process;
 import static com.voximplant.foregroundservice.Constants.NOTIFICATION_CONFIG;
-
 public class VIForegroundService extends Service {
-
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         String action = intent.getAction();
@@ -29,7 +24,6 @@ public class VIForegroundService extends Service {
                     if (notificationConfig != null && notificationConfig.containsKey("id")) {
                         Notification notification = NotificationHelper.getInstance(getApplicationContext())
                                 .buildNotification(getApplicationContext(), notificationConfig);
-
                         startForeground((int)notificationConfig.getDouble("id"), notification);
                     }
                 }
@@ -38,21 +32,18 @@ public class VIForegroundService extends Service {
             }
         }
         return START_NOT_STICKY;
-
     }
-
     @Override
     public void onTaskRemoved(Intent rootIntent) {
-      super.onTaskRemoved(rootIntent);
-      this.stopForeground(true);
-      Process.killProcess(Process.myPid());
-      this.stopSelf();
+        super.onTaskRemoved(rootIntent);
+        this.stopForeground(true);
+        Process.killProcess(Process.myPid());
+        this.stopSelf();
     }
     @Override
     public void onDestroy() {
-      super.onDestroy();
-      this.stopForeground(true);
-      Process.killProcess(Process.myPid());
-      this.stopSelf();
+        super.onDestroy();
+        this.stopForeground(true);
+        this.stopSelf();
     }
 }
